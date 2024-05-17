@@ -2,8 +2,9 @@ package user
 
 import (
 	"context"
-	"log"
 	"time"
+
+	"go.uber.org/zap"
 
 	"test.com/project-user/internal/dao"
 	"test.com/project-user/internal/repo"
@@ -39,7 +40,7 @@ func (u *HandlerUser) getCaptcha(c *gin.Context) {
 	//4.调用短信验证平台
 	go func() {
 		time.Sleep(2 * time.Second)
-		log.Println("调用短信验证平台成功,发送短信")
+		zap.L().Info("调用短信验证平台成功,发送短信")
 		//redis 假设后续缓存可能存在mysql中，也可能存在mongo中，或者memcache中
 		//存储验证码到redis中,并设置过期时间
 		key := "register_" + mobile
@@ -47,8 +48,10 @@ func (u *HandlerUser) getCaptcha(c *gin.Context) {
 		defer cancel()
 		err := u.cache.Put(ctx, key, code, 15*time.Minute)
 		if err != nil {
-			log.Printf("验证码存入redis出错, cause by: %v", err)
+			zap.L().Error("验证码存入redis出错, err:", zap.Error(err))
+			return
 		}
+		zap.L().Info("验证码存入redis成功")
 	}()
 	rsp.ResponseSuccess(c, nil)
 }
