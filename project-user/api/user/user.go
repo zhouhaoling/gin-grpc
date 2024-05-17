@@ -1,32 +1,37 @@
 package user
 
 import (
+	"context"
 	"log"
-	"net/http"
 	"time"
 
-	"test.com/project-user/tools"
+	"test.com/project-user/internal/dao"
+	"test.com/project-user/internal/repo"
 
-	"test.com/project-user/pkg/model"
+	"test.com/project-user/tools"
 
 	"github.com/gin-gonic/gin"
 	"test.com/common"
 )
 
 type HandlerUser struct {
+	cache repo.Cache
 }
 
 func NewHandlerUser() *HandlerUser {
-	return &HandlerUser{}
+	return &HandlerUser{
+		cache: dao.RC,
+	}
 }
 
-func (u *HandlerUser) getCaptcha(ctx *gin.Context) {
-	rsp := common.NewResult()
+func (u *HandlerUser) getCaptcha(c *gin.Context) {
+	rsp := common.NewResponseData()
+
 	//1.获取参数
-	mobile := ctx.PostForm("mobile")
+	mobile := c.PostForm("mobile")
 	//2.校验参数
 	if !common.VerifyModel(mobile) {
-		ctx.JSON(http.StatusOK, rsp.Fail(model.NoLegalMobile, "手机号格式不正确"))
+		rsp.ResponseError(c, common.CodeNoLegalMobile)
 		return
 	}
 	//3.生成验证码
@@ -35,8 +40,15 @@ func (u *HandlerUser) getCaptcha(ctx *gin.Context) {
 	go func() {
 		time.Sleep(2 * time.Second)
 		log.Println("调用短信验证平台成功,发送短信")
+		//redis 假设后续缓存可能存在mysql中，也可能存在mongo中，或者memcache中
 		//存储验证码到redis中,并设置过期时间
-		log.Printf("存入成功：register_%s:%s", mobile, code)
+		key := "register_" + mobile
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		err := u.cache.Put(ctx, key, code, 15*time.Minute)
+		if err != nil {
+			log.Printf("验证码存入redis出错, cause by: %v", err)
+		}
 	}()
-	ctx.JSON(http.StatusOK, rsp.Success(code))
+	rsp.ResponseSuccess(c, nil)
 }

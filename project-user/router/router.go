@@ -16,6 +16,7 @@ func NewRegisterRouter() *RegisterRouter {
 	return &RegisterRouter{}
 }
 
+// routers里面存放这各个路由模块的对象，比如user.RouterUser
 var routers []Router
 
 func (rg *RegisterRouter) Route(ro Router, router *gin.Engine) {
@@ -24,7 +25,8 @@ func (rg *RegisterRouter) Route(ro Router, router *gin.Engine) {
 
 func InitRouter(r *gin.Engine) {
 	//rg := NewRegisterRouter()
-	//rg.Route(user.NewRouterUser(), r)
+	//rg.Route(&user.RouterUser{}, r)
+	//遍历各个路由模块对象，并调用它们的路由注册方法
 	for _, ro := range routers {
 		ro.Route(r)
 	}
