@@ -18,7 +18,7 @@ import (
 var lg *zap.Logger
 
 type LogConfig struct {
-	DebugFileName string `json:"debugFileName"`
+	ErrorFileName string `json:"debugFileName"`
 	InfoFileName  string `json:"infoFileName"`
 	WarnFileName  string `json:"warnFileName"`
 	MaxSize       int    `json:"maxsize"`
@@ -31,18 +31,18 @@ type LogConfig struct {
  * @Description:按照日记级别记录日志
  */
 func InitLogger(cfg *LogConfig) (err error) {
-	writeSyncerDebug := getLogWriter(cfg.DebugFileName, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
+	writeSyncerError := getLogWriter(cfg.ErrorFileName, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
 	writeSyncerInfo := getLogWriter(cfg.InfoFileName, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
 	writeSyncerWarn := getLogWriter(cfg.WarnFileName, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
 	encoder := getEncoder()
 	//文件输出
-	debugCore := zapcore.NewCore(encoder, writeSyncerDebug, zapcore.DebugLevel)
+	errorCore := zapcore.NewCore(encoder, writeSyncerError, zapcore.ErrorLevel)
 	infoCore := zapcore.NewCore(encoder, writeSyncerInfo, zapcore.InfoLevel)
 	warnCore := zapcore.NewCore(encoder, writeSyncerWarn, zapcore.WarnLevel)
 	//标准输出
 	consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 	std := zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel)
-	core := zapcore.NewTee(debugCore, infoCore, warnCore, std)
+	core := zapcore.NewTee(errorCore, infoCore, warnCore, std)
 	lg = zap.New(core, zap.AddCaller())
 	zap.ReplaceGlobals(lg) // 替换zap包中全局的logger实例，后续在其他包中只需使用zap.L()调用即可
 	return

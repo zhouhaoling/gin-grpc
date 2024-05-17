@@ -14,9 +14,9 @@ func main() {
 	r := gin.New()
 	r.Use(logs.GinLogger(), logs.GinRecovery(true))
 	lc := &logs.LogConfig{
-		DebugFileName: "gin-grpc\\common\\logs\\debug\\debug.log",
-		InfoFileName:  "gin-grpc\\common\\logs\\info\\info.log",
-		WarnFileName:  "gin-grpc\\common\\logs\\warn\\warn.log",
+		ErrorFileName: "../../logs_file/error/error.log",
+		InfoFileName:  "../../logs_file/info/info.log",
+		WarnFileName:  "../../logs_file/warn/warn.log",
 		MaxSize:       500,
 		MaxAge:        28,
 		MaxBackups:    3,
