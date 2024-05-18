@@ -1,0 +1,15 @@
+syntax = "proto3";
+package proto;
+option go_package = "../service/user_grpc";
+
+message CaptchaRequest {
+  string mobile = 1;
+}
+
+message CaptchaResponse {
+
+}
+
+service LoginService {
+  rpc Captcha(CaptchaRequest) returns (CaptchaResponse);
+}

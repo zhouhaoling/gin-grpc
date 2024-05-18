@@ -43,8 +43,6 @@ func (u *HandlerUser) getCaptcha(c *gin.Context) {
 	go func() {
 		time.Sleep(2 * time.Second)
 		zap.L().Info("调用短信验证平台成功,发送短信")
-		zap.L().Error("调用失败")
-		zap.L().Warn("警告")
 		//redis 假设后续缓存可能存在mysql中，也可能存在mongo中，或者memcache中
 		//存储验证码到redis中,并设置过期时间
 		key := "register_" + mobile

@@ -1,0 +1,18 @@
+server:
+  name: "gin-grpc"
+  port: 8080
+zap:
+  error_file_name: "../../logs_file/error/error.log"
+  warn_file_name: "../../logs_file/warn/warn.log"
+  info_file_name: "../../logs_file/info/info.log"
+  max_size: 500
+  max_age: 28
+  max_backups: 3
+redis:
+  host: "localhost"
+  port: 6379
+  password: ""
+  db: 0
+grpc:
+  addr: "127.0.0.1:8881"
+  name: "user"

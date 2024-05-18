@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"test.com/project-user/config"
+
 	"github.com/go-redis/redis/v8"
 )
 
@@ -20,12 +22,7 @@ func NewRedisCache(rdb *redis.Client) *RedisCache {
 }
 
 func init() {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-		PoolSize: 100,
-	})
+	rdb := redis.NewClient(config.AppConf.ReadRedisConfig())
 	RC = NewRedisCache(rdb)
 }
 
