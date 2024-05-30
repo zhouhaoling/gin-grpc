@@ -1,13 +1,10 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"test.com/common/logs"
-
-	"github.com/go-redis/redis/v8"
 
 	"github.com/spf13/viper"
 )
@@ -18,13 +15,6 @@ type Config struct {
 	viper *viper.Viper
 	App   *AppConfig
 	Log   *LogConfig
-	Redis *RedisConfig
-	Grpc  *GrpcConfig
-}
-
-type GrpcConfig struct {
-	Addr string
-	Name string
 }
 
 type AppConfig struct {
@@ -39,13 +29,6 @@ type LogConfig struct {
 	MaxSize       int
 	MaxAge        int
 	MaxBackups    int
-}
-
-type RedisConfig struct {
-	Host     string
-	Port     int
-	Password string
-	DB       int
 }
 
 func InitConfig() *Config {
@@ -64,7 +47,6 @@ func InitConfig() *Config {
 	}
 	//调用初始化的一些方法
 	conf.ReadServerConfig()
-	conf.ReadGrpcConfig()
 	conf.InitZapLog()
 	return conf
 }
@@ -83,27 +65,7 @@ func (c *Config) ReadServerConfig() {
 		MaxAge:        c.viper.GetInt("zap.max_age"),
 		MaxBackups:    c.viper.GetInt("zap.max_backups"),
 	}
-	c.Redis = &RedisConfig{
-		Host:     c.viper.GetString("redis.host"),
-		Port:     c.viper.GetInt("redis.port"),
-		Password: c.viper.GetString("redis.password"),
-		DB:       c.viper.GetInt("redis.db"),
-	}
-}
 
-func (c *Config) ReadGrpcConfig() {
-	c.Grpc = &GrpcConfig{
-		Addr: c.viper.GetString("user_grpc.addr"),
-		Name: c.viper.GetString("user_grpc.name"),
-	}
-}
-
-func (c *Config) ReadRedisConfig() *redis.Options {
-	return &redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", c.Redis.Host, c.Redis.Port),
-		Password: c.Redis.Password,
-		DB:       c.Redis.DB,
-	}
 }
 
 func (c *Config) InitZapLog() {

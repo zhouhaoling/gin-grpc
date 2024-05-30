@@ -6,17 +6,17 @@ import (
 	"fmt"
 	"time"
 
+	ug "test.com/project-user/user_grpc"
+
 	"test.com/project-user/internal/repo"
 
 	"go.uber.org/zap"
 	"test.com/common"
 	"test.com/project-user/tools"
-
-	pd "test.com/project-user/internal/service/user_grpc"
 )
 
 type UserService struct {
-	pd.UnimplementedLoginServiceServer
+	ug.UnimplementedLoginServiceServer
 	cache repo.Cache
 }
 
@@ -26,7 +26,7 @@ func NewUserService(cache repo.Cache) *UserService {
 	}
 }
 
-func (svc *UserService) GetCaptcha(ctx context.Context, msg *pd.CaptchaRequest) (*pd.CaptchaResponse, error) {
+func (svc *UserService) GetCaptcha(ctx context.Context, msg *ug.CaptchaRequest) (*ug.CaptchaResponse, error) {
 	//1.获取参数
 	mobile := msg.Mobile
 	//2.校验参数
@@ -43,7 +43,7 @@ func (svc *UserService) GetCaptcha(ctx context.Context, msg *pd.CaptchaRequest) 
 		//redis 假设后续缓存可能存在mysql中，也可能存在mongo中，或者memcache中
 		//存储验证码到redis中,并设置过期时间
 		key := "register_" + mobile
-		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 		defer cancel()
 		err := svc.cache.Put(ctx, key, code, 15*time.Minute)
 		if err != nil {
@@ -52,5 +52,7 @@ func (svc *UserService) GetCaptcha(ctx context.Context, msg *pd.CaptchaRequest) 
 		}
 		zap.L().Info("验证码存入redis成功")
 	}()
-	return &pd.CaptchaResponse{}, nil
+	return &ug.CaptchaResponse{
+		Code: code,
+	}, nil
 }

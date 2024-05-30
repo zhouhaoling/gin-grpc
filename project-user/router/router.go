@@ -4,12 +4,13 @@ import (
 	"log"
 	"net"
 
+	grpc2 "test.com/project-user/user_grpc"
+
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"test.com/project-user/config"
 	"test.com/project-user/internal/dao"
 	"test.com/project-user/internal/service"
-	"test.com/project-user/internal/service/user_grpc"
 )
 
 // Router 接口
@@ -53,12 +54,12 @@ func RegisterGrpc() *grpc.Server {
 	c := registerGrpc{
 		Addr: config.AppConf.Grpc.Addr,
 		RegisterFunc: func(server *grpc.Server) {
-			user_grpc.RegisterLoginServiceServer(server, service.NewUserService(dao.RC))
+			grpc2.RegisterLoginServiceServer(server, service.NewUserService(dao.RC))
 		},
 	}
 	server := grpc.NewServer()
 	c.RegisterFunc(server)
-	listen, err := net.Listen("tcp", config.AppConf.Grpc.Addr)
+	listen, err := net.Listen("tcp", c.Addr)
 	if err != nil {
 		log.Println("cannot listen")
 	}

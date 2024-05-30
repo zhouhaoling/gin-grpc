@@ -1,15 +1,17 @@
 syntax = "proto3";
 package proto;
-option go_package = "../service/user_grpc";
+option go_package = "../../user_grpc";
 
 message CaptchaRequest {
   string mobile = 1;
 }
 
 message CaptchaResponse {
-
+  string code = 1;
 }
 
 service LoginService {
-  rpc Captcha(CaptchaRequest) returns (CaptchaResponse);
+  rpc GetCaptcha(CaptchaRequest) returns (CaptchaResponse);
 }
+
+    
