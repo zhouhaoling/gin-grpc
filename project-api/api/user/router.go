@@ -24,7 +24,7 @@ func NewRouterUser() *RouterUser {
  * @Description:存放用户相关路由
  */
 func (ru *RouterUser) Route(r *gin.Engine) {
-	InitRpcUserClient()
+	InitGrpcUserClient()
 	h := NewHandlerUser()
 	r.POST("/project/login/getCaptcha", h.getCaptcha)
 }

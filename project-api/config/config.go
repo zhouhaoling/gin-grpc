@@ -78,6 +78,7 @@ func (c *Config) InitZapLog() {
 		MaxAge:        c.Log.MaxAge,
 		MaxBackups:    c.Log.MaxBackups,
 	}
+
 	if err := logs.InitLogger(lc); err != nil {
 		log.Fatalln("日志初始化失败")
 	}

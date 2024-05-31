@@ -1,10 +1,10 @@
 server:
-  name: "gin-user_grpc-api"
+  name: "gin-grpc-api"
   addr: "127.0.0.1:80"
 zap:
-  error_file_name: "../../logs_file/error/error.log"
-  warn_file_name: "../../logs_file/warn/warn.log"
-  info_file_name: "../../logs_file/info/info.log"
+  error_file_name: "../logs_file/error/error.log"
+  warn_file_name: "../logs_file/warn/warn.log"
+  info_file_name: "../logs_file/info/info.log"
   max_size: 500
   max_age: 28
   max_backups: 3

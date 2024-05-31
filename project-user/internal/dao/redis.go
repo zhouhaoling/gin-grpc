@@ -11,6 +11,11 @@ import (
 
 var RC *RedisCache
 
+func init() {
+	rdb := redis.NewClient(config.AppConf.ReadRedisConfig())
+	RC = NewRedisCache(rdb)
+}
+
 type RedisCache struct {
 	rdb *redis.Client
 }
@@ -21,12 +26,8 @@ func NewRedisCache(rdb *redis.Client) *RedisCache {
 	}
 }
 
-func init() {
-	rdb := redis.NewClient(config.AppConf.ReadRedisConfig())
-	RC = NewRedisCache(rdb)
-}
-
 func (r *RedisCache) Put(ctx context.Context, key, value string, expire time.Duration) error {
+	//fmt.Println("r.rdb:", r.rdb)
 	err := r.rdb.Set(ctx, key, value, expire).Err()
 	return err
 }

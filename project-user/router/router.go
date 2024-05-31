@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	grpc2 "test.com/project-user/user_grpc"
+	ug "test.com/project-user/user_grpc"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -54,12 +54,12 @@ func RegisterGrpc() *grpc.Server {
 	c := registerGrpc{
 		Addr: config.AppConf.Grpc.Addr,
 		RegisterFunc: func(server *grpc.Server) {
-			grpc2.RegisterLoginServiceServer(server, service.NewUserService(dao.RC))
+			ug.RegisterLoginServiceServer(server, service.NewUserService(dao.RC))
 		},
 	}
 	server := grpc.NewServer()
 	c.RegisterFunc(server)
-	listen, err := net.Listen("tcp", c.Addr)
+	listen, err := net.Listen("tcp", config.AppConf.Grpc.Addr)
 	if err != nil {
 		log.Println("cannot listen")
 	}

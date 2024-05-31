@@ -10,10 +10,10 @@ import (
 
 var LoginServiceClient ug.LoginServiceClient
 
-func InitRpcUserClient() {
+func InitGrpcUserClient() {
 	conn, err := grpc.NewClient("127.0.0.1:8881", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	ug.NewLoginServiceClient(conn)
+	LoginServiceClient = ug.NewLoginServiceClient(conn)
 }

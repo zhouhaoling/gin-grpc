@@ -93,8 +93,8 @@ func (c *Config) ReadServerConfig() {
 
 func (c *Config) ReadGrpcConfig() {
 	c.Grpc = &GrpcConfig{
-		Addr: c.viper.GetString("user_grpc.addr"),
-		Name: c.viper.GetString("user_grpc.name"),
+		Addr: c.viper.GetString("grpc.addr"),
+		Name: c.viper.GetString("grpc.name"),
 	}
 }
 
