@@ -1,3 +1,7 @@
 {"level":"INFO","time":"2024-05-31T14:50:04.065+0800","caller":"project-user/main.go:18","msg":"初始化成功"}
 {"level":"INFO","time":"2024-06-03T15:28:47.076+0800","caller":"service/user.go:45","msg":"调用短信验证平台成功,发送短信"}
 {"level":"INFO","time":"2024-06-03T15:28:47.078+0800","caller":"service/user.go:57","msg":"验证码存入redis成功"}
+{"level":"INFO","time":"2024-06-03T17:39:56.033+0800","caller":"service/user.go:45","msg":"调用短信验证平台成功,发送短信"}
+{"level":"ERROR","time":"2024-06-03T17:39:56.099+0800","caller":"service/user.go:53","msg":"验证码存入redis出错, err:","error":"dial tcp 127.0.0.1:16379: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"INFO","time":"2024-06-03T17:42:08.056+0800","caller":"service/user.go:45","msg":"调用短信验证平台成功,发送短信"}
+{"level":"INFO","time":"2024-06-03T17:42:08.058+0800","caller":"service/user.go:57","msg":"验证码存入redis成功"}

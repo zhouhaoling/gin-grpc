@@ -1,0 +1,1 @@
+{"level":"ERROR","time":"2024-06-03T17:39:56.099+0800","caller":"service/user.go:53","msg":"验证码存入redis出错, err:","error":"dial tcp 127.0.0.1:16379: connectex: No connection could be made because the target machine actively refused it."}

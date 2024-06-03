@@ -1,0 +1,23 @@
+server:
+  name: "gin-grpc-user"
+  addr: "0.0.0.0:8080"
+zap:
+  error_file_name: "/logs/error/error.log"
+  warn_file_name: "/logs/warn/warn.log"
+  info_file_name: "/logs/info/info.log"
+  max_size: 500
+  max_age: 28
+  max_backups: 3
+redis:
+  host: "redis6"
+  port: 16379
+  password: ""
+  db: 0
+grpc:
+  addr: "0.0.0.0:8881"
+  name: "user"
+  version: "1.0.0"
+  weight: 2
+etcd:
+  addrs:
+    - "etcd3:2379"
