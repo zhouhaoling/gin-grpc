@@ -23,6 +23,10 @@ func BuildPrefix(info Server) string {
 	return fmt.Sprintf("/%s/%s/", info.Name, info.Version)
 }
 
+func BuildRegPath(info Server) string {
+	return fmt.Sprintf("%s%s", BuildPrefix(info), info.Addr)
+}
+
 func ParseValue(value []byte) (Server, error) {
 	info := Server{}
 	if err := json.Unmarshal(value, &info); err != nil {

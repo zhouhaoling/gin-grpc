@@ -29,17 +29,18 @@ type Register struct {
 }
 
 // NewRegister create a register base on etcd
-func NewRegister(etcdAddr []string, logger *zap.Logger) *Register {
+func NewRegister(etcdAddrs []string, logger *zap.Logger) *Register {
 	return &Register{
-		EtcdAddrs:   etcdAddr,
-		logger:      logger,
+		EtcdAddrs:   etcdAddrs,
 		DialTimeout: 3,
+		logger:      logger,
 	}
 }
 
 // Register a service
 func (r *Register) Register(srvInfo Server, ttl int64) (chan<- struct{}, error) {
 	var err error
+
 	if strings.Split(srvInfo.Addr, ":")[0] == "" {
 		return nil, errors.New("invalid ip")
 	}
@@ -65,7 +66,7 @@ func (r *Register) Register(srvInfo Server, ttl int64) (chan<- struct{}, error) 
 	return r.closeCh, nil
 }
 
-// Stop for register
+// Stop  register
 func (r *Register) Stop() {
 	r.closeCh <- struct{}{}
 }
@@ -88,14 +89,13 @@ func (r *Register) register() error {
 	if err != nil {
 		return err
 	}
-
-	_, err = r.cli.Put(context.Background(), BuildPrefix(r.srvInfo), string(data), clientv3.WithLease(r.leasesID))
+	_, err = r.cli.Put(context.Background(), BuildRegPath(r.srvInfo), string(data), clientv3.WithLease(r.leasesID))
 	return err
 }
 
 // unregister 删除节点
 func (r *Register) unregister() error {
-	_, err := r.cli.Delete(context.Background(), BuildPrefix(r.srvInfo))
+	_, err := r.cli.Delete(context.Background(), BuildRegPath(r.srvInfo))
 	return err
 }
 
@@ -108,9 +108,8 @@ func (r *Register) keepAlive() {
 			if err := r.unregister(); err != nil {
 				r.logger.Error("unregister failed", zap.Error(err))
 			}
-
 			if _, err := r.cli.Revoke(context.Background(), r.leasesID); err != nil {
-				r.logger.Error("revoke lease failed", zap.Error(err))
+				r.logger.Error("revoke failed", zap.Error(err))
 			}
 			return
 		case res := <-r.keepAliveCh:
@@ -136,7 +135,7 @@ func (r *Register) UpdateHandler() http.HandlerFunc {
 		weight, err := strconv.Atoi(wi)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			_, _ = w.Write([]byte(err.Error()))
+			w.Write([]byte(err.Error()))
 			return
 		}
 
@@ -146,7 +145,7 @@ func (r *Register) UpdateHandler() http.HandlerFunc {
 			if err != nil {
 				return err
 			}
-			_, err = r.cli.Put(context.Background(), BuildPrefix(r.srvInfo), string(data), clientv3.WithLease(r.leasesID))
+			_, err = r.cli.Put(context.Background(), BuildRegPath(r.srvInfo), string(data), clientv3.WithLease(r.leasesID))
 			return err
 		}
 
@@ -160,7 +159,7 @@ func (r *Register) UpdateHandler() http.HandlerFunc {
 }
 
 func (r *Register) GetServerInfo() (Server, error) {
-	resp, err := r.cli.Get(context.Background(), BuildPrefix(r.srvInfo))
+	resp, err := r.cli.Get(context.Background(), BuildRegPath(r.srvInfo))
 	if err != nil {
 		return r.srvInfo, err
 	}

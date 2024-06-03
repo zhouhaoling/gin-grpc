@@ -20,11 +20,14 @@ type Config struct {
 	Log   *LogConfig
 	Redis *RedisConfig
 	Grpc  *GrpcConfig
+	Etcd  *EtcdConfig
 }
 
 type GrpcConfig struct {
-	Addr string
-	Name string
+	Addr    string
+	Name    string
+	Version string
+	Weight  int64
 }
 
 type AppConfig struct {
@@ -48,6 +51,10 @@ type RedisConfig struct {
 	DB       int
 }
 
+type EtcdConfig struct {
+	Addrs []string
+}
+
 func InitConfig() *Config {
 	v := viper.New()
 	conf := &Config{
@@ -65,6 +72,7 @@ func InitConfig() *Config {
 	//调用初始化的一些方法
 	conf.ReadServerConfig()
 	conf.ReadGrpcConfig()
+	conf.ReadEtcdConfig()
 	conf.InitZapLog()
 	return conf
 }
@@ -93,8 +101,10 @@ func (c *Config) ReadServerConfig() {
 
 func (c *Config) ReadGrpcConfig() {
 	c.Grpc = &GrpcConfig{
-		Addr: c.viper.GetString("grpc.addr"),
-		Name: c.viper.GetString("grpc.name"),
+		Addr:    c.viper.GetString("grpc.addr"),
+		Name:    c.viper.GetString("grpc.name"),
+		Version: c.viper.GetString("grpc.version"),
+		Weight:  c.viper.GetInt64("grpc.weight"),
 	}
 }
 
@@ -103,6 +113,17 @@ func (c *Config) ReadRedisConfig() *redis.Options {
 		Addr:     fmt.Sprintf("%s:%d", c.Redis.Host, c.Redis.Port),
 		Password: c.Redis.Password,
 		DB:       c.Redis.DB,
+	}
+}
+
+func (c *Config) ReadEtcdConfig() {
+	var addrs []string
+	err := c.viper.UnmarshalKey("etcd.addrs", &addrs)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	c.Etcd = &EtcdConfig{
+		Addrs: addrs,
 	}
 }
 

@@ -4,6 +4,12 @@ import (
 	"log"
 	"net"
 
+	"google.golang.org/grpc/resolver"
+
+	"test.com/common/logs"
+
+	"test.com/common/discovery"
+
 	ug "test.com/project-user/user_grpc"
 
 	"github.com/gin-gonic/gin"
@@ -73,4 +79,20 @@ func RegisterGrpc() *grpc.Server {
 	}()
 
 	return server
+}
+
+func RegisterEtcdServer() {
+	etcdRegister := discovery.NewResolver(config.AppConf.Etcd.Addrs, logs.LG)
+	resolver.Register(etcdRegister)
+	info := discovery.Server{
+		Name:    config.AppConf.Grpc.Name,
+		Addr:    config.AppConf.Grpc.Addr,
+		Version: config.AppConf.Grpc.Version,
+		Weight:  config.AppConf.Grpc.Weight,
+	}
+	r := discovery.NewRegister(config.AppConf.Etcd.Addrs, logs.LG)
+	_, err := r.Register(info, 2)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

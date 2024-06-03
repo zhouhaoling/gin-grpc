@@ -15,6 +15,7 @@ type Config struct {
 	viper *viper.Viper
 	App   *AppConfig
 	Log   *LogConfig
+	Etcd  *EtcdConfig
 }
 
 type AppConfig struct {
@@ -47,6 +48,7 @@ func InitConfig() *Config {
 	}
 	//调用初始化的一些方法
 	conf.ReadServerConfig()
+	conf.ReadEtcdConfig()
 	conf.InitZapLog()
 	return conf
 }
@@ -81,5 +83,20 @@ func (c *Config) InitZapLog() {
 
 	if err := logs.InitLogger(lc); err != nil {
 		log.Fatalln("日志初始化失败")
+	}
+}
+
+type EtcdConfig struct {
+	Addrs []string
+}
+
+func (c *Config) ReadEtcdConfig() {
+	var addrs []string
+	err := c.viper.UnmarshalKey("etcd.addrs", &addrs)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	c.Etcd = &EtcdConfig{
+		Addrs: addrs,
 	}
 }
