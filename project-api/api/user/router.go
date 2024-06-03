@@ -27,4 +27,6 @@ func (ru *RouterUser) Route(r *gin.Engine) {
 	InitGrpcUserClient()
 	h := NewHandlerUser()
 	r.POST("/project/login/getCaptcha", h.getCaptcha)
+	r.POST("/project/login/user_login", h.userLogin)
+	r.POST("/project/register", h.userRegister)
 }
