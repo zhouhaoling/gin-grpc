@@ -4,6 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/go-playground/validator/v10"
+	"go.uber.org/zap"
+
+	"test.com/project-api/internal/model"
+
 	"test.com/common/errs"
 
 	"github.com/gin-gonic/gin"
@@ -36,11 +41,34 @@ func (u *HandlerUser) getCaptcha(c *gin.Context) {
 func (u *HandlerUser) userRegister(c *gin.Context) {
 	//1.将参数绑定到结构体中
 	//2.校验参数
-	//3.调用grpc服务的用户注册服务
-	//5.grpc服务中：判断账号是否存在，邮箱是否重复，手机号是否重复
-	//6.生产uuid(雪花算法），将密码加密，将数据插入到数据库中
-	//7.返回操作后的响应码和err
-	//8.根据grpc返回的err来进行判断，返回给前端什么样的响应
+	//3.调用user grpc服务 获取响应
+	//4.返回结果
+	res := common.NewResponseData()
+	var param model.ParamRegister
+	if err := c.ShouldBindJSON(&param); err != nil {
+		zap.L().Error("register with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			res.ResponseError(c, common.CodeInvalidParams)
+			return
+		}
+		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, errs.Translate(common.Trans))
+		return
+	}
+	//校验参数
+	if err := param.Verify(); err != nil {
+		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, err.Error())
+		return
+	}
+	//调用grpc服务
+	err := UserServiceClient.Register()
+	if err != nil {
+		code, msg := errs.ParseGrpcError(err)
+		res.ResponseErrorWithMsg(c, code, msg)
+		return
+	}
+	//返回成功的响应码
+	res.ResponseSuccess(c, common.CodeSuccess)
 }
 
 func (u *HandlerUser) userLogin(c *gin.Context) {

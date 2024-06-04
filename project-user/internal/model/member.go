@@ -3,19 +3,19 @@ package model
 // Member 数据库实体类
 type Member struct {
 	Common
-	Account       string `json:"account"`         //账号
-	Password      string `json:"password"`        //密码
-	Name          string `json:"name"`            //用户昵称
-	Mobile        string `json:"mobile"`          //手机
-	Realname      string `json:"realname"`        //真实姓名
-	CreateTime    int64  `json:"create_time"`     //创建时间
-	Status        int    `json:"status"`          //账号状态
-	LastLoginTime int64  `json:"last_login_time"` //最后登录时间
-	Sex           int    `json:"sex"`             //性别
-	Avatar        string `json:"avatar"`          //头像
-	Idcard        string `json:"id_card"`         //身份证号
-	Description   string `json:"description"`     //备注
-	Email         string `json:"email"`           //邮箱
+	Account       string `json:"account"`                         //账号
+	Password      string `json:"password"`                        //密码
+	Name          string `json:"name"`                            //用户昵称
+	Mobile        string `json:"mobile"`                          //手机
+	RealName      string `json:"realname" gorm:"column:realname"` //真实姓名
+	CreateTime    int64  `json:"create_time"`                     //创建时间
+	Status        int    `json:"status"`                          //账号状态
+	LastLoginTime int64  `json:"last_login_time"`                 //最后登录时间
+	Sex           int    `json:"sex"`                             //性别
+	Avatar        string `json:"avatar"`                          //头像
+	IdCard        string `json:"id_card" gorm:"column:idcard"`    //身份证号
+	Description   string `json:"description"`                     //备注
+	Email         string `json:"email"`                           //邮箱
 }
 
 func (m *Member) TableName() string {
