@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
+	"test.com/project-grpc/user_grpc"
+
 	"test.com/common/errs"
 
 	"test.com/project-user/internal/model"
-
-	ug "test.com/project-user/user_grpc"
 
 	"test.com/project-user/internal/repo"
 
@@ -19,7 +19,8 @@ import (
 )
 
 type UserService struct {
-	ug.UnimplementedLoginServiceServer
+	user_grpc.UnimplementedLoginServiceServer
+	user_grpc.UnimplementedUserServiceServer
 	Cache repo.Cache
 }
 
@@ -29,7 +30,12 @@ func NewUserService(cache repo.Cache) *UserService {
 	}
 }
 
-func (svc *UserService) GetCaptcha(ctx context.Context, msg *ug.CaptchaRequest) (*ug.CaptchaResponse, error) {
+// Register 用于注册
+func (svc *UserService) Register(ctx context.Context, msg *user_grpc.RegisterRequest) (*user_grpc.RegisterResponse, error) {
+	return nil, nil
+}
+
+func (svc *UserService) GetCaptcha(ctx context.Context, msg *user_grpc.CaptchaRequest) (*user_grpc.CaptchaResponse, error) {
 	//1.获取参数
 	mobile := msg.Mobile
 	//2.校验参数
@@ -56,7 +62,7 @@ func (svc *UserService) GetCaptcha(ctx context.Context, msg *ug.CaptchaRequest) 
 
 		zap.L().Info("验证码存入redis成功")
 	}()
-	return &ug.CaptchaResponse{
+	return &user_grpc.CaptchaResponse{
 		Code: code,
 	}, nil
 }

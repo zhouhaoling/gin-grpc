@@ -4,13 +4,13 @@ import (
 	"log"
 	"net"
 
+	ug "test.com/project-user/internal/service/user_grpc"
+
 	"google.golang.org/grpc/resolver"
 
 	"test.com/common/logs"
 
 	"test.com/common/discovery"
-
-	ug "test.com/project-user/user_grpc"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"

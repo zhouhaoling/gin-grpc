@@ -11,10 +11,11 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	ug "test.com/project-user/user_grpc"
+	ug "test.com/project-grpc/user_grpc"
 )
 
-var LoginServiceClient ug.LoginServiceClient
+var loginServiceClient ug.LoginServiceClient
+var userServiceClient ug.UserServiceClient
 
 func InitGrpcUserClient() {
 	etcdRegister := discovery.NewResolver(config.AppConf.Etcd.Addrs, logs.LG)
@@ -23,5 +24,6 @@ func InitGrpcUserClient() {
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	LoginServiceClient = ug.NewLoginServiceClient(conn)
+	loginServiceClient = ug.NewLoginServiceClient(conn)
+	userServiceClient = ug.NewUserServiceClient(conn)
 }

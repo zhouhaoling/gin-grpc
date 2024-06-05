@@ -1,6 +1,6 @@
 syntax = "proto3";
 package proto;
-option go_package = "../../user_grpc";
+option go_package = "../../../project-grpc/user_grpc";
 
 message RegisterRequest {
   string email = 1;

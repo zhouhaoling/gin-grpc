@@ -6,5 +6,5 @@ use (
 	./common
 	./project-api
 	./project-user
-
+	./project-grpc
 )

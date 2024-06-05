@@ -27,7 +27,7 @@ func VerifyCode(code string) bool {
 // VerifyEmail 校验邮箱
 func VerifyEmail(email string) bool {
 	pattern := `^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`
-	reg := regexp2.MustCompile(pattern, regexp2.Debug)
+	reg := regexp2.MustCompile(pattern, regexp2.None)
 	match, err := reg.MatchString(email)
 	if err != nil {
 		return false

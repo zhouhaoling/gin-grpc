@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	ug "test.com/project-grpc/user_grpc"
+
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
 
@@ -13,7 +15,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"test.com/common"
-	ug "test.com/project-user/user_grpc"
 )
 
 type HandlerUser struct {
@@ -28,7 +29,7 @@ func (u *HandlerUser) getCaptcha(c *gin.Context) {
 	mobile := c.PostForm("mobile")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	response, err := LoginServiceClient.GetCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
+	response, err := loginServiceClient.GetCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
 	if err != nil {
 		code, msg := errs.ParseGrpcError(err)
 		res.ResponseErrorWithMsg(c, code, msg)
@@ -45,7 +46,7 @@ func (u *HandlerUser) userRegister(c *gin.Context) {
 	//4.返回结果
 	res := common.NewResponseData()
 	var param model.ParamRegister
-	if err := c.ShouldBindJSON(&param); err != nil {
+	if err := c.ShouldBind(&param); err != nil {
 		zap.L().Error("register with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
@@ -61,7 +62,22 @@ func (u *HandlerUser) userRegister(c *gin.Context) {
 		return
 	}
 	//调用grpc服务
-	err := UserServiceClient.Register()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	//两种方法，将param的值赋值给msg,使用第一种要求结构体的字段名都一致
+	//msg := &ug.RegisterRequest{}
+	//if err := copier.Copy(msg, param); err != nil {
+	//	res.ResponseErrorWithMsg(c, common.CodeServerBusy, "copy有误")
+	//	return
+	//}
+	msg := &ug.RegisterRequest{
+		Mobile:   param.Mobile,
+		Password: param.Password,
+		Captcha:  param.Captcha,
+		Name:     param.Name,
+		Email:    param.Email,
+	}
+	_, err := userServiceClient.Register(ctx, msg)
 	if err != nil {
 		code, msg := errs.ParseGrpcError(err)
 		res.ResponseErrorWithMsg(c, code, msg)
