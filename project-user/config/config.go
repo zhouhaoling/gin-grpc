@@ -21,6 +21,17 @@ type Config struct {
 	Redis *RedisConfig
 	Grpc  *GrpcConfig
 	Etcd  *EtcdConfig
+	MySQL *MySQLConfig
+}
+
+type MySQLConfig struct {
+	UserName     string
+	Password     string
+	Host         string
+	DB           string
+	Port         int
+	MaxOpenConns int
+	MaxIdleConns int
 }
 
 type GrpcConfig struct {
@@ -73,6 +84,7 @@ func InitConfig() *Config {
 	conf.ReadServerConfig()
 	conf.ReadGrpcConfig()
 	conf.ReadEtcdConfig()
+	conf.ReadMySQLConfig()
 	conf.InitZapLog()
 	return conf
 }
@@ -92,10 +104,10 @@ func (c *Config) ReadServerConfig() {
 		MaxBackups:    c.viper.GetInt("zap.max_backups"),
 	}
 	c.Redis = &RedisConfig{
-		Host:     c.viper.GetString("redis.host"),
-		Port:     c.viper.GetInt("redis.port"),
-		Password: c.viper.GetString("redis.password"),
-		DB:       c.viper.GetInt("redis.db"),
+		Host:     c.viper.GetString("redis_dao.host"),
+		Port:     c.viper.GetInt("redis_dao.port"),
+		Password: c.viper.GetString("redis_dao.password"),
+		DB:       c.viper.GetInt("redis_dao.db"),
 	}
 }
 
@@ -124,6 +136,18 @@ func (c *Config) ReadEtcdConfig() {
 	}
 	c.Etcd = &EtcdConfig{
 		Addrs: addrs,
+	}
+}
+
+func (c *Config) ReadMySQLConfig() {
+	c.MySQL = &MySQLConfig{
+		UserName:     c.viper.GetString("mysql.username"),
+		Password:     c.viper.GetString("mysql.password"),
+		Host:         c.viper.GetString("mysql.host"),
+		DB:           c.viper.GetString("mysql.db"),
+		Port:         c.viper.GetInt("mysql.port"),
+		MaxOpenConns: c.viper.GetInt("mysql.max_open_conns"),
+		MaxIdleConns: c.viper.GetInt("mysql.max_idle_conns"),
 	}
 }
 

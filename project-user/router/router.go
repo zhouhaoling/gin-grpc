@@ -4,7 +4,9 @@ import (
 	"log"
 	"net"
 
-	ug "test.com/project-user/internal/service/user_grpc"
+	"test.com/project-user/internal/repository/dao/redis_dao"
+
+	ug "test.com/project-grpc/user_grpc"
 
 	"google.golang.org/grpc/resolver"
 
@@ -15,7 +17,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"test.com/project-user/config"
-	"test.com/project-user/internal/dao"
 	"test.com/project-user/internal/service"
 )
 
@@ -56,11 +57,12 @@ type registerGrpc struct {
 	RegisterFunc func(*grpc.Server)
 }
 
+// RegisterGrpc 注册grpc服务
 func RegisterGrpc() *grpc.Server {
 	c := registerGrpc{
 		Addr: config.AppConf.Grpc.Addr,
 		RegisterFunc: func(server *grpc.Server) {
-			ug.RegisterLoginServiceServer(server, service.NewUserService(dao.RC))
+			ug.RegisterLoginServiceServer(server, service.NewUserService(redis_dao.RC))
 		},
 	}
 	server := grpc.NewServer()
@@ -81,6 +83,7 @@ func RegisterGrpc() *grpc.Server {
 	return server
 }
 
+// RegisterEtcdServer 注册etcd服务
 func RegisterEtcdServer() {
 	etcdRegister := discovery.NewResolver(config.AppConf.Etcd.Addrs, logs.LG)
 	resolver.Register(etcdRegister)

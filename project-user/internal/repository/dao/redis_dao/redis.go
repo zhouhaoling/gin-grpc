@@ -1,20 +1,13 @@
-package dao
+package redis_dao
 
 import (
 	"context"
 	"time"
 
-	"test.com/project-user/config"
-
 	"github.com/go-redis/redis/v8"
 )
 
 var RC *RedisCache
-
-func init() {
-	rdb := redis.NewClient(config.AppConf.ReadRedisConfig())
-	RC = NewRedisCache(rdb)
-}
 
 type RedisCache struct {
 	rdb *redis.Client

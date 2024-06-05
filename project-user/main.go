@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"test.com/common"
 	"test.com/common/logs"
-	_ "test.com/project-user/internal/dao"
+	_ "test.com/project-user/internal/repository/database"
 	"test.com/project-user/router"
 )
 
