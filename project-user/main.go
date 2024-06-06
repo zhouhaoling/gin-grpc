@@ -1,7 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"test.com/project-user/config"
+	"test.com/project-user/pkg/snowflake"
 
 	"github.com/gin-gonic/gin"
 	"test.com/common"
@@ -11,6 +14,10 @@ import (
 )
 
 func main() {
+
+	if err := snowflake.InitSnowflake(config.AppConf.Snow.StartTime, config.AppConf.Snow.MachineID); err != nil {
+		log.Fatalln("初始化雪花算法失败", err)
+	}
 	r := gin.New()
 	r.Use(logs.GinLogger(), logs.GinRecovery(true))
 	//config.AppConf.InitZapLog()

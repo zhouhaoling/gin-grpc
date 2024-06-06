@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -52,4 +53,18 @@ func InitMySQL() (err error) {
 
 func GetDB() *gorm.DB {
 	return db
+}
+
+type GormConn struct {
+	db *gorm.DB
+}
+
+func NewGormConn() *GormConn {
+	return &GormConn{
+		db: GetDB(),
+	}
+}
+
+func (g *GormConn) Session(ctx context.Context) *gorm.DB {
+	return g.db.Session(&gorm.Session{Context: ctx})
 }

@@ -29,3 +29,7 @@ mysql:
   dbname: "gin-grpc"
   max_idle_conns: 10
   max_open_conns: 50
+
+snow:
+  start_time: "2024-04-12"
+  machine_id: 1

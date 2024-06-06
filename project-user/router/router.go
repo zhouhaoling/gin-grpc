@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"test.com/project-user/internal/repository/dao/redis_dao"
+	"test.com/project-user/internal/repository/dao/redis"
 
 	ug "test.com/project-grpc/user_grpc"
 
@@ -62,7 +62,8 @@ func RegisterGrpc() *grpc.Server {
 	c := registerGrpc{
 		Addr: config.AppConf.Grpc.Addr,
 		RegisterFunc: func(server *grpc.Server) {
-			ug.RegisterLoginServiceServer(server, service.NewUserService(redis_dao.RC))
+			ug.RegisterLoginServiceServer(server, service.NewUserService(redis.RC))
+			ug.RegisterUserServiceServer(server, service.NewUserService(redis.RC))
 		},
 	}
 	server := grpc.NewServer()

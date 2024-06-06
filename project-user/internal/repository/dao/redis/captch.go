@@ -1,4 +1,4 @@
-package redis_dao
+package redis
 
 import (
 	"context"

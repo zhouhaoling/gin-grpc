@@ -22,6 +22,12 @@ type Config struct {
 	Grpc  *GrpcConfig
 	Etcd  *EtcdConfig
 	MySQL *MySQLConfig
+	Snow  *SnowConfig
+}
+
+type SnowConfig struct {
+	StartTime string
+	MachineID int64
 }
 
 type MySQLConfig struct {
@@ -85,8 +91,16 @@ func InitConfig() *Config {
 	conf.ReadGrpcConfig()
 	conf.ReadEtcdConfig()
 	conf.ReadMySQLConfig()
+	conf.ReadSnowConfig()
 	conf.InitZapLog()
 	return conf
+}
+
+func (c *Config) ReadSnowConfig() {
+	c.Snow = &SnowConfig{
+		StartTime: c.viper.GetString("snow.start_time"),
+		MachineID: c.viper.GetInt64("snow.machine_id"),
+	}
 }
 
 func (c *Config) ReadServerConfig() {
@@ -104,10 +118,10 @@ func (c *Config) ReadServerConfig() {
 		MaxBackups:    c.viper.GetInt("zap.max_backups"),
 	}
 	c.Redis = &RedisConfig{
-		Host:     c.viper.GetString("redis_dao.host"),
-		Port:     c.viper.GetInt("redis_dao.port"),
-		Password: c.viper.GetString("redis_dao.password"),
-		DB:       c.viper.GetInt("redis_dao.db"),
+		Host:     c.viper.GetString("redis.host"),
+		Port:     c.viper.GetInt("redis.port"),
+		Password: c.viper.GetString("redis.password"),
+		DB:       c.viper.GetInt("redis.db"),
 	}
 }
 
