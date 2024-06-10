@@ -24,9 +24,9 @@ etcd:
 mysql:
   host: "127.0.0.1"
   port: 3309
-  user: "root"
+  username: "root"
   password: "root"
-  dbname: "gin-grpc"
+  db: "gin-grpc"
   max_idle_conns: 10
   max_open_conns: 50
 

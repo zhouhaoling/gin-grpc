@@ -7,8 +7,6 @@ import (
 
 	"test.com/common/logs"
 
-	"github.com/go-redis/redis/v8"
-
 	"github.com/spf13/viper"
 )
 
@@ -84,7 +82,8 @@ func InitConfig() *Config {
 
 	err := conf.viper.ReadInConfig()
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Printf("viper.ReadInConfig() failed, err:%v\n", err)
+		return nil
 	}
 	//调用初始化的一些方法
 	conf.ReadServerConfig()
@@ -131,14 +130,6 @@ func (c *Config) ReadGrpcConfig() {
 		Name:    c.viper.GetString("grpc.name"),
 		Version: c.viper.GetString("grpc.version"),
 		Weight:  c.viper.GetInt64("grpc.weight"),
-	}
-}
-
-func (c *Config) ReadRedisConfig() *redis.Options {
-	return &redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", c.Redis.Host, c.Redis.Port),
-		Password: c.Redis.Password,
-		DB:       c.Redis.DB,
 	}
 }
 

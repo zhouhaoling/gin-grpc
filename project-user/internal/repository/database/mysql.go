@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm/schema"
@@ -15,13 +14,6 @@ import (
 )
 
 var db *gorm.DB
-
-func init() {
-	err := InitMySQL()
-	if err != nil {
-		log.Fatalln("mysql init error")
-	}
-}
 
 func InitMySQL() (err error) {
 	//配置mysql连接参数
@@ -39,7 +31,7 @@ func InitMySQL() (err error) {
 		},
 	})
 	if err != nil {
-		zap.L().Error("mysql connect error")
+		zap.L().Error("mysql connect error:", zap.Error(err))
 		return err
 	}
 
@@ -55,16 +47,46 @@ func GetDB() *gorm.DB {
 	return db
 }
 
+// GormConn 开启session db
 type GormConn struct {
-	db *gorm.DB
+	gdb *gorm.DB
+	tx  *gorm.DB
 }
 
-func NewGormConn() *GormConn {
+func NewGormSession() *GormConn {
 	return &GormConn{
-		db: GetDB(),
+		gdb: GetDB(),
+	}
+}
+
+// NewTran 开启事务，或者直接使用NewGormSession()然后在赋值
+func NewTran() *GormConn {
+
+	return &GormConn{
+		gdb: GetDB(),
+		tx:  GetDB(),
 	}
 }
 
 func (g *GormConn) Session(ctx context.Context) *gorm.DB {
-	return g.db.Session(&gorm.Session{Context: ctx})
+	return g.gdb.Session(&gorm.Session{Context: ctx})
+}
+
+func (g *GormConn) Rollback() {
+	g.tx.Rollback()
+
+}
+
+func (g *GormConn) Commit() {
+	g.tx.Commit()
+
+}
+
+// Begin 开启事物,g.gdb.Begin()和GetDB().Begin()有什么区别吗？
+func (g *GormConn) Begin() {
+	g.tx = g.gdb.Begin()
+}
+
+func (g *GormConn) Tx(ctx context.Context) *gorm.DB {
+	return g.tx.WithContext(ctx)
 }

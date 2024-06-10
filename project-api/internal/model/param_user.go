@@ -8,6 +8,8 @@ import (
 
 // ParamLogin 登录请求参数
 type ParamLogin struct {
+	Account  string `json:"account" form:"account" binding:"required"`
+	Password string `json:"password" form:"password" binding:"required"`
 }
 
 // ParamRegister 注册请求参数

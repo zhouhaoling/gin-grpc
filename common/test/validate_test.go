@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"test.com/common"
+
 	"github.com/dlclark/regexp2"
 )
 
@@ -30,4 +32,10 @@ func IsValidEmail(email string) bool {
 		return false
 	}
 	return match
+}
+
+func TestIsValidMobile(t *testing.T) {
+	mobile := "19174683866"
+	flag := common.VerifyModel(mobile)
+	fmt.Println("flag:", flag)
 }

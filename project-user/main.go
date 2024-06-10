@@ -3,21 +3,32 @@ package main
 import (
 	"log"
 
-	"test.com/project-user/config"
-	"test.com/project-user/pkg/snowflake"
-
 	"github.com/gin-gonic/gin"
 	"test.com/common"
 	"test.com/common/logs"
-	_ "test.com/project-user/internal/repository/database"
+	"test.com/project-user/config"
+	"test.com/project-user/internal/repository/database"
+	"test.com/project-user/pkg/snowflake"
 	"test.com/project-user/router"
 )
 
-func main() {
-
+func init() {
+	//if err := config.InitConfig(); err != nil {
+	//	log.Fatalln("初始化配置文件失败", err)
+	//}
+	if err := database.InitRedis(config.AppConf); err != nil {
+		log.Fatalln("初始化redis失败", err)
+	}
+	if err := database.InitMySQL(); err != nil {
+		log.Fatalln("初始化mysql失败", err)
+	}
 	if err := snowflake.InitSnowflake(config.AppConf.Snow.StartTime, config.AppConf.Snow.MachineID); err != nil {
 		log.Fatalln("初始化雪花算法失败", err)
 	}
+}
+
+func main() {
+
 	r := gin.New()
 	r.Use(logs.GinLogger(), logs.GinRecovery(true))
 	//config.AppConf.InitZapLog()

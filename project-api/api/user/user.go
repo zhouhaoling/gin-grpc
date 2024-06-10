@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	ug "test.com/project-grpc/user_grpc"
@@ -27,6 +28,11 @@ func NewHandlerUser() *HandlerUser {
 func (u *HandlerUser) getCaptcha(c *gin.Context) {
 	res := common.NewResponseData()
 	mobile := c.PostForm("mobile")
+	fmt.Println("mobile:", mobile)
+	if flag := common.VerifyModel(mobile); flag != true {
+		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, "手机号格式不正确")
+		return
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	response, err := loginServiceClient.GetCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
@@ -84,14 +90,28 @@ func (u *HandlerUser) userRegister(c *gin.Context) {
 		return
 	}
 	//返回成功的响应码
-	res.ResponseSuccess(c, common.CodeSuccess)
+	res.ResponseSuccess(c, nil)
 }
 
 func (u *HandlerUser) userLogin(c *gin.Context) {
 	//1.将参数绑定到结构体中
-	//2.校验参数，比如验证码是否为6位数字，密码是否为字母和数字组成等
-	//3.调用grpc服务的用户登录服务
-	//4.grpc服务中，先查询用户是否存在
-	//5.判断验证码是否正确,判断验证码是否正确
-	//6.获取用户信息.
+	//2.调用grpc服务的用户登录服务
+	//3.grpc服务中，先查询用户是否存在
+	//4.获取用户信息.
+	//5.返回响应
+
+	res := common.NewResponseData()
+	var param model.ParamLogin
+
+	if err := c.ShouldBind(&param); err != nil {
+		zap.L().Error("register with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			res.ResponseError(c, common.CodeInvalidParams)
+			return
+		}
+		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, errs.Translate(common.Trans))
+		return
+	}
+
 }

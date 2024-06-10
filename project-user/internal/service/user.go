@@ -2,14 +2,18 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
-	"test.com/project-user/internal/repository/dao/mysql"
+	"test.com/project-user/internal/repository/database"
 
-	"test.com/project-user/pkg/snowflake"
+	"github.com/go-redis/redis/v8"
+
+	"test.com/project-user/internal/repository"
 
 	"golang.org/x/crypto/bcrypt"
+	"test.com/project-user/pkg/snowflake"
 
 	"test.com/project-user/config"
 
@@ -29,14 +33,22 @@ import (
 type UserService struct {
 	user_grpc.UnimplementedLoginServiceServer
 	user_grpc.UnimplementedUserServiceServer
-	cache  repo.Cache
-	member repo.MemberRepo
+	cache repo.Cache
+	mrepo *repository.MemberRepository
+	orepo *repository.OrganizationRepository
+	arepo *repository.AddressRepository
+	drepo *repository.DingTalkRepository
+	tran  database.Transaction
 }
 
 func NewUserService(cache repo.Cache) *UserService {
 	return &UserService{
-		cache:  cache,
-		member: mysql.NewMemberDao(),
+		cache: cache,
+		mrepo: repository.NewMemberRepository(),
+		orepo: repository.NewOrganizationRepository(),
+		tran:  repository.NewTransaction(),
+		arepo: repository.NewAddressRepository(),
+		drepo: repository.NewDingTalkRepository(),
 	}
 }
 
@@ -47,6 +59,10 @@ func (svc *UserService) Register(c context.Context, msg *user_grpc.RegisterReque
 	ctx := context.Background()
 	key := config.RegisterMobileCacheKey + msg.Mobile
 	captcha, err := svc.cache.Get(ctx, key)
+	if errors.Is(err, redis.Nil) {
+		zap.L().Warn("验证码已过期")
+		return nil, errs.GrpcError(model.CaptchaNotExist)
+	}
 	if err != nil {
 		zap.L().Error("register redis get error", zap.Error(err))
 		return nil, errs.GrpcError(model.RedisError)
@@ -56,33 +72,37 @@ func (svc *UserService) Register(c context.Context, msg *user_grpc.RegisterReque
 		return nil, errs.GrpcError(model.ErrorCaptcha)
 	}
 	//2.校验业务逻辑(邮箱是否被注册，手机是否被注册）
-	exist, err := svc.member.GetMemberByEmail(ctx, msg.Email)
-	if err != nil {
-		zap.L().Error("register get email error", zap.Error(err))
-		return nil, errs.GrpcError(model.MySQLError)
-	}
-	if exist {
-		zap.L().Warn("email is exist, register failed")
-		return nil, errs.GrpcError(model.EmailExist)
-	}
-	exist, err = svc.member.GetMemberByMobile(ctx, msg.Mobile)
-	if err != nil {
-		zap.L().Error("register get mobile error", zap.Error(err))
-		return nil, errs.GrpcError(model.MySQLError)
-	}
-	if exist {
-		zap.L().Warn("mobile is exist, register failed")
-		return nil, errs.GrpcError(model.MobileExist)
-	}
-	//3.执行业务,生成uuid，并将用户信息存入mysql中的organization表中
-	uuid := snowflake.GenID()
-	hash, err := bcrypt.GenerateFromPassword([]byte(msg.Password), bcrypt.DefaultCost)
-
+	err = svc.mrepo.IsRegisterMemberExist(ctx, msg)
 	if err != nil {
 		return nil, err
 	}
+	//3.执行业务,生成uuid，并将用户信息存入mysql中的organization表和member表
+	mid := snowflake.GenID()
+	hash, err := bcrypt.GenerateFromPassword([]byte(msg.Password), bcrypt.DefaultCost)
+	if err != nil {
+		zap.L().Warn("使用bcrypt加密失败", zap.Error(err))
+		return nil, errs.GrpcError(model.ErrorServerBusy)
+	}
+	//开启事物
+	err = svc.tran.Action(func(conn database.DBConn) error {
+		//插入用户信息
+		member, err := svc.mrepo.CreateMember(conn, ctx, mid, hash, msg)
+		if err != nil {
+			zap.L().Error("register member failed", zap.Error(err))
+			return errs.GrpcError(model.MySQLError)
+		}
+		//插入
+		//插入组织信息
+		err = svc.orepo.CreateOrganization(conn, ctx, member)
+		if err != nil {
+			zap.L().Error("register organization failed", zap.Error(err))
+			return errs.GrpcError(model.MySQLError)
+		}
+		return nil
+	})
+
 	//4.返回响应
-	return nil, nil
+	return &user_grpc.RegisterResponse{}, err
 }
 
 func (svc *UserService) GetCaptcha(c context.Context, msg *user_grpc.CaptchaRequest) (*user_grpc.CaptchaResponse, error) {
