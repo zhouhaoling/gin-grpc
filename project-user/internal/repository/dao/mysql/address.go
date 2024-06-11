@@ -21,3 +21,9 @@ func (dao *AddressDao) InsertAddress(conn database.DBConn, ctx context.Context, 
 	dao.db = conn.(*database.GormConn)
 	return dao.db.Tx(ctx).Create(address).Error
 }
+
+func (dao *AddressDao) SelectAddressByMId(ctx context.Context, mid int64) (address model.Address, err error) {
+	result := dao.db.Session(ctx).Where("mid = ?", mid).First(&address)
+	err = result.Error
+	return address, err
+}

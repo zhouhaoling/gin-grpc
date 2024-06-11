@@ -38,3 +38,8 @@ func (dao *MemberDao) GetMemberByMobile(ctx context.Context, mobile string) (boo
 	err := dao.db.Session(ctx).Model(&model.Member{}).Where("mobile = ?", mobile).Count(&count).Error
 	return count > 0, err
 }
+
+func (dao *MemberDao) SelectMemberByAccount(ctx context.Context, account string) (member model.Member, err error) {
+	result := dao.db.Session(ctx).Where("account = ?", account).First(&member)
+	return member, result.Error
+}

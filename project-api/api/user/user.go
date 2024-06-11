@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/jinzhu/copier"
+
 	ug "test.com/project-grpc/user_grpc"
 
 	"github.com/go-playground/validator/v10"
@@ -97,8 +99,7 @@ func (u *HandlerUser) userLogin(c *gin.Context) {
 	//1.将参数绑定到结构体中
 	//2.调用grpc服务的用户登录服务
 	//3.grpc服务中，先查询用户是否存在
-	//4.获取用户信息.
-	//5.返回响应
+	//4.返回响应
 
 	res := common.NewResponseData()
 	var param model.ParamLogin
@@ -113,5 +114,25 @@ func (u *HandlerUser) userLogin(c *gin.Context) {
 		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, errs.Translate(common.Trans))
 		return
 	}
-
+	//调用grpc服务，完成登录
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	msg := &ug.LoginRequest{
+		Account:  param.Account,
+		Password: param.Password,
+	}
+	response, err := userServiceClient.Login(ctx, msg)
+	if err != nil {
+		code, msg := errs.ParseGrpcError(err)
+		res.ResponseErrorWithMsg(c, code, msg)
+		return
+	}
+	loginResp := &model.LoginResp{}
+	err = copier.Copy(loginResp, response)
+	if err != nil {
+		res.ResponseError(c, common.CodeServerBusy)
+		return
+	}
+	//返回响应
+	res.ResponseSuccess(c, loginResp)
 }

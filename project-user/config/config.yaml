@@ -33,3 +33,9 @@ mysql:
 snow:
   start_time: "2024-04-12"
   machine_id: 1
+jwt:
+  secret: "llhn5KCCIaSih1wJc90Xu3aRHVgqsUuB"
+  issuer: "zhou"
+  token_type: "Bearer"
+  access_exp: 7
+  refresh_exp: 30

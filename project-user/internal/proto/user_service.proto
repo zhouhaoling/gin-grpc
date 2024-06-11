@@ -14,6 +14,56 @@ message RegisterResponse{
 
 }
 
+message LoginRequest{
+  string account = 1;
+  string password = 2;
+}
+
+message LoginResponse{
+  MemberResponse member = 1;
+  repeated OrganizationResponse organizationList = 2;
+  TokenResponse tokenList = 3;
+}
+
+message MemberResponse{
+  int64 id = 1;
+  int64 mid = 2;
+  string name = 3;
+  string mobile = 4;
+  string realname = 5;
+  string account = 6;
+  int32 status = 7;
+  int64  lastLoginTime = 8;
+  string address = 9;
+  int32 province = 10;
+  int32 city = 11;
+  int32 area = 12;
+  string email = 13;
+}
+
+message OrganizationResponse {
+  int64 id = 1;
+  string name = 2;
+  string avatar = 3;
+  string description = 4;
+  int64 memberId = 5;
+  int64 createTime = 6;
+  int32 personal = 7;
+  string address = 8;
+  int32 province = 9;
+  int32 city = 10;
+  int32 area = 11;
+}
+
+message TokenResponse{
+  string accessToken = 1;
+  string refreshToken = 2;
+  string tokenType = 3;
+  int64 accessTokenExp = 4;
+}
+
+
 service UserService {
   rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
 }

@@ -34,3 +34,7 @@ func (repo *OrganizationRepository) CreateOrganization(conn database.DBConn, ctx
 	}
 	return repo.dao.InsertOrganization(conn, ctx, org)
 }
+
+func (repo *OrganizationRepository) FindOrganizationListByMId(ctx context.Context, mid int64) ([]*model.Organization, error) {
+	return repo.dao.SelectOrganizationListByMId(ctx, mid)
+}

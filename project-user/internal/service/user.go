@@ -6,6 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	"test.com/common/jwts"
+
+	"github.com/jinzhu/copier"
+
+	"gorm.io/gorm"
+
 	"test.com/project-user/internal/repository/database"
 
 	"github.com/go-redis/redis/v8"
@@ -78,7 +84,7 @@ func (svc *UserService) Register(c context.Context, msg *user_grpc.RegisterReque
 	}
 	//3.执行业务,生成uuid，并将用户信息存入mysql中的organization表和member表
 	mid := snowflake.GenID()
-	hash, err := bcrypt.GenerateFromPassword([]byte(msg.Password), bcrypt.DefaultCost)
+	pwd, err := bcrypt.GenerateFromPassword([]byte(msg.Password), bcrypt.DefaultCost)
 	if err != nil {
 		zap.L().Warn("使用bcrypt加密失败", zap.Error(err))
 		return nil, errs.GrpcError(model.ErrorServerBusy)
@@ -86,7 +92,7 @@ func (svc *UserService) Register(c context.Context, msg *user_grpc.RegisterReque
 	//开启事物
 	err = svc.tran.Action(func(conn database.DBConn) error {
 		//插入用户信息
-		member, err := svc.mrepo.CreateMember(conn, ctx, mid, hash, msg)
+		member, err := svc.mrepo.CreateMember(conn, ctx, mid, pwd, msg)
 		if err != nil {
 			zap.L().Error("register member failed", zap.Error(err))
 			return errs.GrpcError(model.MySQLError)
@@ -135,4 +141,80 @@ func (svc *UserService) GetCaptcha(c context.Context, msg *user_grpc.CaptchaRequ
 	return &user_grpc.CaptchaResponse{
 		Code: code,
 	}, nil
+}
+
+func (svc *UserService) Login(c context.Context, msg *user_grpc.LoginRequest) (*user_grpc.LoginResponse, error) {
+	//1.查询账号密码是否正确
+	//2.获取用户信息，获取组织信息，生成token
+	//3.返回响应
+
+	ctx := context.Background()
+	//查询账号是否存在
+	member, err := svc.mrepo.FindMemberByAccount(ctx, msg.Account)
+	if err != nil {
+		zap.L().Error(" login fail, select member account failed, error:", zap.Error(err))
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.GrpcError(model.AccountAndPwdError)
+		}
+		return nil, errs.GrpcError(model.MySQLError)
+	}
+	//验证密码是否正确
+	err = bcrypt.CompareHashAndPassword([]byte(member.Password), []byte(msg.Password))
+	if err != nil {
+		zap.L().Error("两个密码不一致,error:", zap.Error(err))
+		return nil, errs.GrpcError(model.AccountAndPwdError)
+	}
+	//查询地址信息
+	addr, err := svc.arepo.FindAddressByMId(ctx, member.MId)
+	if err != nil {
+		zap.L().Error("select address failed,error:", zap.Error(err))
+	}
+	memberResp := &user_grpc.MemberResponse{
+		Id:            member.Id,
+		Mid:           member.MId,
+		Name:          member.Name,
+		Mobile:        member.Mobile,
+		Realname:      member.RealName,
+		Account:       member.Account,
+		Email:         member.Email,
+		LastLoginTime: member.LastLoginTime,
+		Status:        int32(member.Status),
+		Address:       addr.Address,
+		Province:      int32(addr.Province),
+		City:          int32(addr.City),
+		Area:          int32(addr.Area),
+	}
+	fmt.Println("memberResp:", memberResp)
+	//查询组织表信息
+	org, err := svc.orepo.FindOrganizationListByMId(ctx, member.MId)
+	if err != nil {
+		zap.L().Error("login fail, select organization failed, error:", zap.Error(err))
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.GrpcError(model.OrgNotExist)
+		}
+		return nil, errs.GrpcError(model.MySQLError)
+	}
+	//fmt.Println("执行到此处")
+	var orgResp []*user_grpc.OrganizationResponse
+	err = copier.Copy(&orgResp, org)
+	if err != nil {
+		zap.L().Error("copy failed, error:", zap.Error(err))
+	}
+	//jwt生成
+	jwtToken, err := jwts.CreateToken(member.MId)
+	if err != nil {
+		zap.L().Error("jwt生成失败,error:", zap.Error(err))
+		return nil, errs.GrpcError(model.ErrorServerBusy)
+	}
+	tl := &user_grpc.TokenResponse{
+		AccessToken:    jwtToken.AccessToken,
+		RefreshToken:   jwtToken.RefreshToken,
+		AccessTokenExp: jwtToken.AccessExp,
+		TokenType:      config.AppConf.Jwt.TokenType,
+	}
+	return &user_grpc.LoginResponse{
+		Member:           memberResp,
+		OrganizationList: orgResp,
+		TokenList:        tl,
+	}, err
 }

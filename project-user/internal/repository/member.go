@@ -52,11 +52,6 @@ func (repo *MemberRepository) CreateMember(conn database.DBConn, ctx context.Con
 	if err := repo.adr.InsertAddress(conn, ctx, address); err != nil {
 		return nil, err
 	}
-	dingtalk := &model.DingTalk{}
-	dingtalk.MId = mid
-	if err := repo.dt.InsertDingTalk(conn, ctx, dingtalk); err != nil {
-		return nil, err
-	}
 	return member, nil
 }
 
@@ -81,4 +76,8 @@ func (repo *MemberRepository) IsRegisterMemberExist(ctx context.Context, msg *us
 		return errs.GrpcError(model.MobileExist)
 	}
 	return nil
+}
+
+func (repo *MemberRepository) FindMemberByAccount(ctx context.Context, account string) (model.Member, error) {
+	return repo.member.SelectMemberByAccount(ctx, account)
 }

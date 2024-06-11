@@ -21,3 +21,8 @@ func (dao *OrganizationDao) InsertOrganization(conn database.DBConn, ctx context
 	dao.db = conn.(*database.GormConn)
 	return dao.db.Tx(ctx).Create(org).Error
 }
+
+func (dao *OrganizationDao) SelectOrganizationListByMId(ctx context.Context, mid int64) (org []*model.Organization, err error) {
+	result := dao.db.Session(ctx).Where("member_id = ?", mid).Find(&org)
+	return org, result.Error
+}

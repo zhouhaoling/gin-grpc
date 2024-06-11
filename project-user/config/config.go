@@ -21,6 +21,15 @@ type Config struct {
 	Etcd  *EtcdConfig
 	MySQL *MySQLConfig
 	Snow  *SnowConfig
+	Jwt   *JwtConfig
+}
+
+type JwtConfig struct {
+	Secret     string
+	Issuer     string
+	TokenType  string
+	AccessExp  int
+	RefreshExp int
 }
 
 type SnowConfig struct {
@@ -91,8 +100,19 @@ func InitConfig() *Config {
 	conf.ReadEtcdConfig()
 	conf.ReadMySQLConfig()
 	conf.ReadSnowConfig()
+	conf.ReadJwtConfig()
 	conf.InitZapLog()
 	return conf
+}
+
+func (c *Config) ReadJwtConfig() {
+	c.Jwt = &JwtConfig{
+		Secret:     c.viper.GetString("jwt.secret"),
+		Issuer:     c.viper.GetString("jwt.issuer"),
+		TokenType:  c.viper.GetString("jwt.token_type"),
+		AccessExp:  c.viper.GetInt("jwt.access_exp"),
+		RefreshExp: c.viper.GetInt("jwt.refresh_exp"),
+	}
 }
 
 func (c *Config) ReadSnowConfig() {
