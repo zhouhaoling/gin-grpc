@@ -31,6 +31,10 @@ func NewMemberRepository() *MemberRepository {
 	}
 }
 
+func (repo *MemberRepository) FindMemberByMobile(ctx context.Context, mobile string) (bool, error) {
+	return repo.member.GetMemberByMobile(ctx, mobile)
+}
+
 // CreateMember 创建成员
 func (repo *MemberRepository) CreateMember(conn database.DBConn, ctx context.Context, mid int64, pwd []byte, msg *user_grpc.RegisterRequest) (*model.Member, error) {
 	member := &model.Member{

@@ -1,7 +1,10 @@
 package jwts
 
 import (
+	"errors"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/golang-jwt/jwt/v5"
 	"test.com/project-user/config"
@@ -19,6 +22,7 @@ type ProjectClaims struct {
 	jwt.RegisteredClaims
 }
 
+// CreateToken 创建token
 func CreateToken(mid int64) (JwtToken, error) {
 	c := ProjectClaims{
 		MemberId: mid,
@@ -49,4 +53,20 @@ func CreateToken(mid int64) (JwtToken, error) {
 		RefreshExp:   c.ExpiresAt.Unix(),
 	}
 	return jt, nil
+}
+
+// ParseToken 解析token
+func ParseToken(tokenStr string) (*ProjectClaims, error) {
+	claims := &ProjectClaims{}
+	token, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.AppConf.Jwt.Secret), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !token.Valid {
+		zap.L().Error("token is invalid")
+		return nil, errors.New("token is invalid")
+	}
+	return claims, nil
 }

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"test.com/project-user/pkg/encrypts"
+
 	"test.com/common/jwts"
 
 	"github.com/jinzhu/copier"
@@ -111,14 +113,65 @@ func (svc *UserService) Register(c context.Context, msg *user_grpc.RegisterReque
 	return &user_grpc.RegisterResponse{}, err
 }
 
-func (svc *UserService) GetCaptcha(c context.Context, msg *user_grpc.CaptchaRequest) (*user_grpc.CaptchaResponse, error) {
+func (svc *UserService) GetLoginCaptcha(c context.Context, msg *user_grpc.CaptchaRequest) (*user_grpc.CaptchaResponse, error) {
 	//1.获取参数
 	mobile := msg.Mobile
 	//2.校验参数
 	if !common.VerifyModel(mobile) {
 		return nil, errs.GrpcError(model.NoLegalMobile)
 	}
-	//3.生成验证码
+	//3.判断电话号码是否已被注册
+	exist, err := svc.mrepo.FindMemberByMobile(context.Background(), mobile)
+	if err != nil {
+		zap.L().Error("find member mobile failed", zap.Error(err))
+		return nil, errs.GrpcError(model.MySQLError)
+	}
+	if !exist {
+		zap.L().Warn("该手机号不存在")
+		return nil, errs.GrpcError(model.MobileNotExist)
+	}
+	//4.生成验证码
+	code := tools.GetVerifyCode()
+	fmt.Println("code:", code)
+	//4.调用短信验证平台
+	go func() {
+		time.Sleep(2 * time.Second)
+		zap.L().Info("调用短信验证平台成功,发送短信")
+		//redis存储 假设后续缓存可能存在mysql中，也可能存在mongo中，或者memcache中
+		//存储验证码到redis中,并设置过期时间
+		key := config.LoginMobileCacheKey + mobile
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		err := svc.cache.Put(ctx, key, code, 15*time.Minute)
+		if err != nil {
+			zap.L().Error("验证码存入redis出错, err:", zap.Error(err))
+			return
+		}
+
+		zap.L().Info("验证码存入redis成功")
+	}()
+	return &user_grpc.CaptchaResponse{
+		Code: code,
+	}, nil
+}
+
+func (svc *UserService) GetRegisterCaptcha(c context.Context, msg *user_grpc.CaptchaRequest) (*user_grpc.CaptchaResponse, error) {
+	//1.获取参数
+	mobile := msg.Mobile
+	//2.校验参数
+	if !common.VerifyModel(mobile) {
+		return nil, errs.GrpcError(model.NoLegalMobile)
+	}
+	//3.判断电话号码是否已被注册
+	exist, err := svc.mrepo.FindMemberByMobile(context.Background(), mobile)
+	if err != nil {
+		zap.L().Error("find member mobile failed", zap.Error(err))
+		return nil, errs.GrpcError(model.MySQLError)
+	}
+	if exist {
+		return nil, errs.GrpcError(model.MobileExist)
+	}
+	//4.生成验证码
 	code := tools.GetVerifyCode()
 	fmt.Println("code:", code)
 	//4.调用短信验证平台
@@ -184,6 +237,7 @@ func (svc *UserService) Login(c context.Context, msg *user_grpc.LoginRequest) (*
 		City:          int32(addr.City),
 		Area:          int32(addr.Area),
 	}
+	memberResp.Code, _ = encrypts.EncryptInt64(member.MId, config.AESKey)
 	fmt.Println("memberResp:", memberResp)
 	//查询组织表信息
 	org, err := svc.orepo.FindOrganizationListByMId(ctx, member.MId)
@@ -199,6 +253,10 @@ func (svc *UserService) Login(c context.Context, msg *user_grpc.LoginRequest) (*
 	err = copier.Copy(&orgResp, org)
 	if err != nil {
 		zap.L().Error("copy failed, error:", zap.Error(err))
+	}
+	for _, v := range orgResp {
+		v.Code, _ = encrypts.EncryptInt64(v.Id, config.AESKey)
+		v.Mbid, _ = encrypts.EncryptInt64(v.MemberId, config.AESKey)
 	}
 	//jwt生成
 	jwtToken, err := jwts.CreateToken(member.MId)

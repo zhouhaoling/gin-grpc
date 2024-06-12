@@ -34,3 +34,8 @@ func (p ParamRegister) Verify() error {
 	}
 	return nil
 }
+
+type ParamCode struct {
+	Mobile string `json:"mobile" form:"mobile"`
+	Type   string `json:"type" form:"type"`
+}

@@ -7,4 +7,5 @@ use (
 	./project-api
 	./project-user
 	./project-grpc
+	./project-project
 )

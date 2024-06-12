@@ -4,6 +4,7 @@ option go_package = "../../../project-grpc/user_grpc";
 
 message CaptchaRequest {
   string mobile = 1;
+//  string type = 2;
 }
 
 message CaptchaResponse {
@@ -11,7 +12,8 @@ message CaptchaResponse {
 }
 
 service LoginService {
-  rpc GetCaptcha(CaptchaRequest) returns (CaptchaResponse);
+  rpc GetRegisterCaptcha(CaptchaRequest) returns (CaptchaResponse);
+  rpc GetLoginCaptcha(CaptchaRequest) returns (CaptchaResponse);
 }
 
     

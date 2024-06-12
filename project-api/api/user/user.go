@@ -30,14 +30,26 @@ func NewHandlerUser() *HandlerUser {
 func (u *HandlerUser) getCaptcha(c *gin.Context) {
 	res := common.NewResponseData()
 	mobile := c.PostForm("mobile")
-	fmt.Println("mobile:", mobile)
+	codeType := c.PostForm("type")
+	fmt.Println("type:", codeType)
 	if flag := common.VerifyModel(mobile); flag != true {
 		res.ResponseErrorWithMsg(c, common.CodeInvalidParams, "手机号格式不正确")
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	response, err := loginServiceClient.GetCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
+	var response *ug.CaptchaResponse
+	var err error
+	switch codeType {
+	case "0":
+		response, err = loginServiceClient.GetRegisterCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
+	case "1":
+		response, err = loginServiceClient.GetLoginCaptcha(ctx, &ug.CaptchaRequest{Mobile: mobile})
+	default:
+		res.ResponseError(c, common.CodeServerBusy)
+		return
+	}
+
 	if err != nil {
 		code, msg := errs.ParseGrpcError(err)
 		res.ResponseErrorWithMsg(c, code, msg)

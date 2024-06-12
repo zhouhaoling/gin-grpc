@@ -39,6 +39,7 @@ message MemberResponse{
   int32 city = 11;
   int32 area = 12;
   string email = 13;
+  string code = 14;
 }
 
 message OrganizationResponse {
@@ -53,6 +54,8 @@ message OrganizationResponse {
   int32 province = 9;
   int32 city = 10;
   int32 area = 11;
+  string code = 12;
+  string mbid = 13;
 }
 
 message TokenResponse{

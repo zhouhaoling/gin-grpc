@@ -31,6 +31,7 @@ func (dao *MemberDao) GetMemberByEmail(ctx context.Context, email string) (bool,
 	return count > 0, err
 }
 
+// GetMemberByMobile 判断手机号是否存在
 func (dao *MemberDao) GetMemberByMobile(ctx context.Context, mobile string) (bool, error) {
 	//TODO implement me
 	var count int64

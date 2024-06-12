@@ -7,10 +7,11 @@ type LoginResp struct {
 }
 
 type Member struct {
-	Id     int64  `json:"id"`
+	//Id int64  `json:"id"`
 	Name   string `json:"name"`
 	Mobile string `json:"mobile"`
 	Status int    `json:"status"`
+	Code   string `json:"id"` //加密后的mid
 }
 
 type TokenList struct {
@@ -21,15 +22,17 @@ type TokenList struct {
 }
 
 type OrganizationList struct {
-	Id          int64  `json:"id"`
+	//Id          int64  `json:"id"`
+	Code        string `json:"id"` //加密后的organization表的id
 	Name        string `json:"name"`
 	Avatar      string `json:"avatar"`
 	Description string `json:"description"`
-	MemberId    int64  `json:"member_id"`
-	CreateTime  int64  `json:"create_time"`
-	Personal    int32  `json:"personal"`
-	Address     string `json:"address"`
-	Province    int32  `json:"province"`
-	City        int32  `json:"city"`
-	Area        int32  `json:"area"`
+	//MemberId    int64  `json:"member_id"`
+	Mbid       string `json:"member_id"`
+	CreateTime int64  `json:"create_time"`
+	Personal   int32  `json:"personal"`
+	Address    string `json:"address"`
+	Province   int32  `json:"province"`
+	City       int32  `json:"city"`
+	Area       int32  `json:"area"`
 }
