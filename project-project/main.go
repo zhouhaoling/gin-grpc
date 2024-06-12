@@ -1,13 +1,21 @@
 package main
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"test.com/common"
 	"test.com/common/logs"
 	"test.com/project-project/config"
-
+	"test.com/project-project/internal/repository/database"
 	"test.com/project-project/router"
 )
+
+func init() {
+	if err := database.InitRedis(config.AppConf); err != nil {
+		log.Fatalln("初始化redis失败", err)
+	}
+}
 
 func main() {
 

@@ -4,7 +4,8 @@ import (
 	"log"
 	"net"
 
-	ug "test.com/project-grpc/user_grpc"
+	pg "test.com/project-grpc/project_grpc"
+	"test.com/project-project/internal/service"
 
 	"google.golang.org/grpc/resolver"
 
@@ -59,8 +60,7 @@ func RegisterGrpc() *grpc.Server {
 	c := registerGrpc{
 		Addr: config.AppConf.Grpc.Addr,
 		RegisterFunc: func(server *grpc.Server) {
-			ug.RegisterLoginServiceServer(server, service.NewUserService(redis_dao.RC))
-			ug.RegisterUserServiceServer(server, service.NewUserService(redis_dao.RC))
+			pg.RegisterProjectServiceServer(server, service.NewProjectService())
 		},
 	}
 	server := grpc.NewServer()
