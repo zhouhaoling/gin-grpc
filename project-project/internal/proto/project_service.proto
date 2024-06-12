@@ -1,0 +1,14 @@
+syntax = "proto3";
+package proto;
+option go_package = "../../../project-grpc/project_grpc";
+
+message IndexRequest{
+
+}
+
+message IndexResponse{
+}
+
+service ProjectService {
+  rpc Index(IndexRequest) returns (IndexResponse) {}
+}
