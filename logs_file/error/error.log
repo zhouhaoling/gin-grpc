@@ -1,0 +1,117 @@
+{"level":"ERROR","time":"2024-06-18T12:29:24.130+0800","caller":"login.service.v1/login_service.go:214","msg":"TokenVerify db FindMemberById error","error":"record not found"}
+{"level":"ERROR","time":"2024-06-18T12:29:27.768+0800","caller":"login.service.v1/login_service.go:214","msg":"TokenVerify db FindMemberById error","error":"record not found"}
+{"level":"ERROR","time":"2024-06-18T14:19:21.577+0800","caller":"middleware/auth.go:55","msg":"token解析失败","error":"signature is invalid"}
+{"level":"ERROR","time":"2024-06-18T14:19:21.581+0800","caller":"middleware/auth.go:55","msg":"token解析失败","error":"signature is invalid"}
+{"level":"ERROR","time":"2024-06-18T14:43:26.398+0800","caller":"service/user.go:205","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-06-18T14:43:42.570+0800","caller":"service/user.go:205","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-06-18T19:33:55.785+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-18T19:33:55.923+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-20T22:18:05.339+0800","caller":"service/project.go:215","msg":"project FindProjectDetail FindProjectByPIdAndMemId error","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-20T22:18:05.339+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-20T22:23:38.885+0800","caller":"service/project.go:216","msg":"project FindProjectDetail FindProjectByPIdAndMemId error","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-20T22:24:43.806+0800","caller":"service/project.go:216","msg":"project FindProjectDetail FindProjectByPIdAndMemId error","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-20T22:34:03.521+0800","caller":"service/project.go:229","msg":"拷贝失败","error":"copy destination is invalid"}
+{"level":"ERROR","time":"2024-06-20T22:36:27.187+0800","caller":"service/project.go:229","msg":"拷贝失败","error":"copy destination is invalid"}
+{"level":"ERROR","time":"2024-06-20T22:43:42.081+0800","caller":"project/project.go:181","msg":"copier.Copy(&pd, resp) failed","error":"copy destination is invalid"}
+{"level":"ERROR","time":"2024-06-20T22:44:28.224+0800","caller":"project/project.go:181","msg":"copier.Copy(&pd, resp) failed","error":"copy destination is invalid"}
+{"level":"ERROR","time":"2024-06-21T04:39:02.749+0800","caller":"service/user.go:298","msg":"FindMemberByMemId FindMemberByMId failed","error":"invalid value, should be pointer to struct or slice"}
+{"level":"ERROR","time":"2024-06-21T04:39:02.751+0800","caller":"service/project.go:219","msg":"project FindProjectDetail FindMemberByMemId error","error":"rpc error: code = Code(998) desc = 数据库错误"}
+{"level":"ERROR","time":"2024-06-21T17:24:44.953+0800","caller":"service/project.go:284","msg":"project RecycleProjectByPid RecycleProjectByPid error","error":"Error 1054 (42S22): Unknown column 'delete' in 'field list'"}
+{"level":"ERROR","time":"2024-06-21T18:23:09.071+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-21T18:23:12.074+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-24T15:32:26.833+0800","caller":"service/user.go:351","msg":"user TokenVerifyRedis Get memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-06-24T15:32:26.835+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-06-24T15:32:26.839+0800","caller":"service/user.go:351","msg":"user TokenVerifyRedis Get memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-06-24T15:32:26.839+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-06-24T21:16:53.641+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-24T21:16:53.751+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-24T21:16:56.648+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-24T21:16:56.757+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-25T01:48:02.130+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:02.141+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:02.184+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:02.184+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:11.309+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:11.394+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:11.400+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:21.217+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:21.219+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:48:24.364+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:49:06.562+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T01:49:06.566+0800","caller":"middleware/auth.go:75","msg":"token验证失败","error":"rpc error: code = Internal desc = grpc: error while marshaling: failed to marshal, message is map[string]interface {}, want proto.Message"}
+{"level":"ERROR","time":"2024-06-25T23:40:54.929+0800","caller":"service/task.go:106","msg":"错误，空指针异常"}
+{"level":"ERROR","time":"2024-06-25T23:40:58.451+0800","caller":"service/task.go:106","msg":"错误，空指针异常"}
+{"level":"ERROR","time":"2024-06-25T23:41:05.583+0800","caller":"service/task.go:106","msg":"错误，空指针异常"}
+{"level":"ERROR","time":"2024-06-26T14:34:13.533+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:13.534+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:13.534+0800","caller":"discovery/resolver.go:104","msg":"sync failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:13.541+0800","caller":"discovery/resolver.go:104","msg":"sync failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:13.541+0800","caller":"discovery/resolver.go:104","msg":"sync failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:16.650+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-26T14:34:16.650+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-27T00:27:30.166+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-27T00:27:30.169+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-27T00:27:30.170+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-27T00:27:37.071+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-27T00:27:37.074+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-27T00:27:37.074+0800","caller":"service/task.go:136","msg":"task TaskList FindTaskByStageCode error","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'delete = ? ORDER BY sort asc' at line 1"}
+{"level":"ERROR","time":"2024-06-28T19:46:34.109+0800","caller":"service/task.go:259","msg":"project task SaveTask taskRepo.SaveTaskMember error","error":"Error 1062 (23000): Duplicate entry '21501921651068928' for key 'ms_task_member.ms_tk_mid'"}
+{"level":"ERROR","time":"2024-06-28T20:23:16.246+0800","caller":"middleware/auth.go:60","msg":"token解析失败","error":"token is expired by 89h27m41.2464142s"}
+{"level":"ERROR","time":"2024-06-30T00:43:31.853+0800","caller":"service/task.go:406","msg":"task MyTaskList FindTaskByMemberCode() failed","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'limt ?, ?' at line 1"}
+{"level":"ERROR","time":"2024-06-30T00:45:35.558+0800","caller":"service/task.go:406","msg":"task MyTaskList FindTaskByMemberCode() failed","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'limt ?, ?' at line 1"}
+{"level":"ERROR","time":"2024-06-30T00:49:40.595+0800","caller":"service/task.go:406","msg":"task MyTaskList FindTaskByMemberCode() failed","error":"Error 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'limt ?, ?' at line 1"}
+{"level":"ERROR","time":"2024-06-30T00:59:10.223+0800","caller":"service/user.go:208","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-06-30T01:00:57.861+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-06-30T01:00:58.298+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-01T19:36:15.073+0800","caller":"middleware/auth.go:67","msg":"claims数据为空"}
+{"level":"ERROR","time":"2024-07-01T19:36:15.076+0800","caller":"middleware/auth.go:67","msg":"claims数据为空"}
+{"level":"ERROR","time":"2024-07-01T19:36:15.076+0800","caller":"middleware/auth.go:67","msg":"claims数据为空"}
+{"level":"ERROR","time":"2024-07-01T19:51:25.307+0800","caller":"service/task.go:437","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:09:40.454+0800","caller":"service/task.go:436","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:09:53.997+0800","caller":"service/task.go:436","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:11:35.148+0800","caller":"service/task.go:436","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:15:54.957+0800","caller":"service/task.go:439","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:20:27.540+0800","caller":"service/task.go:439","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:22:22.633+0800","caller":"service/task.go:439","msg":"task MyTaskList FindProjectByIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:28:36.783+0800","caller":"service/task.go:448","msg":"task MyTaskList FindMemberInfoByMIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:30:55.065+0800","caller":"service/task.go:449","msg":"task MyTaskList FindMemberInfoByMIds() failed"}
+{"level":"ERROR","time":"2024-07-01T20:32:45.436+0800","caller":"service/task.go:444","msg":"task MyTaskList FindMemberInfoByMIds() failed"}
+{"level":"ERROR","time":"2024-07-01T21:27:21.787+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-01T21:27:22.388+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-05T16:57:44.422+0800","caller":"user/user.go:72","msg":"register with invalid param","error":"Key: 'ParamRegister.re_password' Error:Field validation for 're_password' failed on the 'required' tag"}
+{"level":"ERROR","time":"2024-07-05T16:59:13.007+0800","caller":"service/user.go:208","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-07-05T16:59:50.686+0800","caller":"service/user.go:208","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.402+0800","caller":"service/user.go:363","msg":"user tokenVerifyRedis Get() memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.403+0800","caller":"middleware/auth.go:77","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.405+0800","caller":"service/user.go:363","msg":"user tokenVerifyRedis Get() memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.406+0800","caller":"middleware/auth.go:77","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.406+0800","caller":"service/user.go:363","msg":"user tokenVerifyRedis Get() memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.406+0800","caller":"service/user.go:363","msg":"user tokenVerifyRedis Get() memberJson failed","error":"redis: nil"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.408+0800","caller":"middleware/auth.go:77","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-07-05T18:08:34.408+0800","caller":"middleware/auth.go:77","msg":"token验证失败","error":"rpc error: code = Code(999) desc = redis错误"}
+{"level":"ERROR","time":"2024-07-05T18:17:56.148+0800","caller":"service/project.go:194","msg":"project CopyProjectTemplate CreateProjectTemplate() failed","error":"slice data #0 is invalid: unsupported data"}
+{"level":"ERROR","time":"2024-07-07T00:51:31.414+0800","caller":"service/user.go:217","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-07-07T00:51:37.852+0800","caller":"service/user.go:217","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-07-08T19:34:35.299+0800","caller":"service/task.go:822","msg":"task CreateTaskList FindTaskStagesByPcode() error","error":"record not found"}
+{"level":"ERROR","time":"2024-07-08T19:36:39.637+0800","caller":"service/task.go:822","msg":"task CreateTaskList FindTaskStagesByPcode() error","error":"record not found"}
+{"level":"ERROR","time":"2024-07-09T00:47:35.507+0800","caller":"discovery/resolver.go:104","msg":"sync failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-09T00:47:36.469+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-09T00:47:36.703+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-16T19:32:23.578+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h28m44.5786127s"}
+{"level":"ERROR","time":"2024-07-16T19:32:23.582+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h28m44.5823829s"}
+{"level":"ERROR","time":"2024-07-16T19:32:23.582+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h28m44.5829174s"}
+{"level":"ERROR","time":"2024-07-16T19:32:23.582+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h28m44.5829174s"}
+{"level":"ERROR","time":"2024-07-16T19:33:01.673+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h29m22.6733712s"}
+{"level":"ERROR","time":"2024-07-16T19:33:01.674+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h29m22.6744414s"}
+{"level":"ERROR","time":"2024-07-16T19:33:01.677+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h29m22.67797s"}
+{"level":"ERROR","time":"2024-07-16T19:33:01.679+0800","caller":"middleware/auth.go:62","msg":"token解析失败","error":"token is expired by 15h29m22.6790303s"}
+{"level":"ERROR","time":"2024-07-16T19:48:26.044+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-16T19:51:32.528+0800","caller":"discovery/discovery.go:117","msg":"register failed","error":"context deadline exceeded"}
+{"level":"ERROR","time":"2024-07-18T18:40:23.809+0800","caller":"service/user.go:232","msg":"两个密码不一致,error:","error":"crypto/bcrypt: hashedPassword is not the hash of the given password"}
+{"level":"ERROR","time":"2024-07-18T19:00:05.109+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:01:19.648+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:01:24.446+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:03:08.094+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:07:17.693+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:07:22.503+0800","caller":"config/mysql.go:92","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}
+{"level":"ERROR","time":"2024-07-18T19:10:15.709+0800","caller":"config/mysql.go:89","msg":"mysql connect error:","error":"dial tcp 127.0.0.1:33091: connectex: No connection could be made because the target machine actively refused it."}

@@ -1,0 +1,62 @@
+server:
+  name: "gin-grpc-project"
+  addr: "127.0.0.1:8081"
+zap:
+  error_file_name: "../logs_file/error/error.log"
+  warn_file_name: "../logs_file/warn/warn.log"
+  info_file_name: "../logs_file/info/info.log"
+  max_size: 500
+  max_age: 28
+  max_backups: 3
+redis:
+  host: "127.0.0.1"
+  port: 16379
+  password: ""
+  db: 0
+grpc:
+  addr: "127.0.0.1:8882"
+  name: "project"
+  version: "1.0.0"
+  weight: 2
+etcd:
+  addrs:
+    - "127.0.0.1:2379"
+mysql:
+  host: "127.0.0.1"
+  port: 3309
+  username: "root"
+  password: "root"
+  db: "gin-grpc"
+  max_idle_conns: 10
+  max_open_conns: 50
+db:
+  separation: true
+  master:
+    name: master
+    username: root
+    password: root
+    host: 127.0.0.1
+    port: 3309
+    db: "gin-grpc"
+  slave:
+    - username: root
+      password: root
+      host: 127.0.0.1
+      port: 3309
+      db: "gin-grpc-slave1"
+      name: slave1
+    - username: root
+      password: root
+      host: 127.0.0.1
+      port: 3309
+      db: "gin-grpc-slave1"
+      name: slave2
+snow:
+  start_time: "2024-04-12"
+  machine_id: 1
+jwt:
+  secret: "llhn5KCCIaSih1wJc90Xu3aRHVgqsUuB"
+  issuer: "zhou"
+  token_type: "Bearer"
+  access_exp: 7
+  refresh_exp: 30

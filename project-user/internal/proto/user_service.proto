@@ -1,0 +1,103 @@
+syntax = "proto3";
+package proto;
+option go_package = "../../../project-grpc/user_grpc";
+
+message RegisterRequest {
+  string email = 1;
+  string name = 2;
+  string password = 3;
+  string mobile = 4;
+  string captcha = 5;
+}
+
+message RegisterResponse{
+
+}
+
+message LoginRequest{
+  string account = 1;
+  string password = 2;
+  string ip = 3;
+}
+
+message LoginResponse{
+  MemberResponse member = 1;
+  repeated OrganizationResponse organizationList = 2;
+  TokenResponse tokenList = 3;
+}
+
+message MemberResponse{
+  int64 id = 1;
+  int64 mid = 2;
+  string name = 3;
+  string mobile = 4;
+  string realname = 5;
+  string account = 6;
+  int32 status = 7;
+  string  lastLoginTime = 8;
+  string address = 9;
+  int32 province = 10;
+  int32 city = 11;
+  int32 area = 12;
+  string email = 13;
+  string code = 14;
+  string createTime = 15;
+  string avatar = 16;
+}
+
+message OrganizationResponse {
+  int64 id = 1;
+  string name = 2;
+  string avatar = 3;
+  string description = 4;
+  int64 memberId = 5;
+  string createTime = 6;
+  int32 personal = 7;
+  string address = 8;
+  int32 province = 9;
+  int32 city = 10;
+  int32 area = 11;
+  string code = 12;
+  //  string mbid = 13;
+  string ownerCode = 13;
+}
+
+message TokenResponse{
+  string accessToken = 1;
+  string refreshToken = 2;
+  string tokenType = 3;
+  int64 accessTokenExp = 4;
+}
+
+message UserRequest{
+  int64 memberId = 1; //用户id
+  repeated int64 mIds= 2;
+}
+
+message OrgListResponse{
+  repeated OrganizationResponse organizationList = 1;
+}
+
+message TokenRequest{
+  int64 memberId = 1;
+  string memberName = 2;
+  string OrganCode = 3;
+}
+
+message TokenMessage{
+  bool flag = 1;
+}
+
+message MemberListResponse{
+  repeated MemberResponse list = 1;
+}
+
+service UserService {
+  rpc Register(RegisterRequest) returns (RegisterResponse) {}
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc MyOrgList(UserRequest) returns (OrgListResponse) {}
+  rpc FindMemberByMemId(UserRequest) returns (MemberResponse) {}
+  rpc TokenVerify(TokenRequest) returns (TokenMessage) {}
+  rpc FindMemberInfoByMIds(UserRequest) returns (MemberListResponse) {}
+}
+
